@@ -1,122 +1,701 @@
-/* ================= ADAPTACIÓN TOTAL PARA MÓVIL EN HORIZONTAL ================= */
-@media (orientation: landscape) and (max-height: 550px) {
-    body {
-        padding: 4px;
-    }
+/* ================= FUENTES WEBFONT (.WOFF2 / .WOFF) ================= */
+@font-face {
+    font-family: 'Aerotis';
+    src: url('fonts/aerotis-webfont.woff2') format('woff2'),
+         url('fonts/aerotis-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
 
-    .invitation-wrapper {
-        width: 96vw !important;
-        height: 88vh !important;
-        max-width: 1000px;
-    }
+@font-face {
+    font-family: 'Delicate Caligraphy';
+    src: url('fonts/DelicateCaligraphy-Demo.woff2') format('woff2'),
+         url('fonts/DelicateCaligraphy-Demo.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
 
-    .invitation-card {
-        width: 100% !important;
-        height: 100% !important;
-        transform: none !important;
-    }
+@font-face {
+    font-family: 'Delicate Elegance';
+    src: url('fonts/DelicateElegance-Regular.woff2') format('woff2'),
+         url('fonts/DelicateElegance-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
 
-    .inside-content {
-        height: 100%;
-    }
+/* ================= RESET BÁSICO ================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-    /* Reducción proporcional de espacios verticales para aprovechar el alto */
-    .panel-left {
-        padding: 10px 8px !important;
-        justify-content: space-around;
-    }
+body {
+    background-color: #f7f5f2;
+    font-family: 'Delicate Elegance', serif;
+    color: #1a1a1a;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    overflow-x: hidden;
+}
 
-    .texto-bonito-box {
-        font-size: 0.72rem !important;
-        margin-bottom: 4px !important;
-        line-height: 1.25 !important;
-    }
+/* ================= OVERLAY ANIMADO: GIRA TU TELÉFONO ================= */
+.rotate-screen-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(18, 18, 18, 0.92);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+    cursor: pointer;
+}
 
-    .confirmacion-box {
-        margin-top: 4px !important;
+@media (min-width: 769px), (orientation: landscape) {
+    .rotate-screen-overlay {
+        display: none !important;
     }
+}
 
-    .confirmacion-box p {
-        font-size: 0.72rem !important;
-        margin-bottom: 2px !important;
-    }
+.rotate-screen-overlay.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
 
-    .link-container a {
-        font-size: 0.8rem !important;
-    }
+.rotate-screen-content {
+    text-align: center;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
 
-    .iban-box {
-        margin-top: 6px !important;
-    }
+.rotate-anim-box {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-    .iban-box p, .iban-box .iban-number {
-        font-size: 0.7rem !important;
-    }
+.curved-arrow {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 60px;
+    height: 60px;
+    z-index: 2;
+    animation: pulseArrow 2.2s infinite ease-in-out;
+}
 
-    /* Panel central compacto */
-    .panel-center {
-        padding: 8px 10px !important;
-        justify-content: space-around;
-    }
+@keyframes pulseArrow {
+    0%, 100% { opacity: 0.35; transform: scale(0.95); }
+    50% { opacity: 1; transform: scale(1.05); }
+}
 
-    .main-illustration-box {
-        top: 0 !important;
-        margin: 0 !important;
-    }
+.phone-icon-anim {
+    width: 50px;
+    height: 90px;
+    border: 3.5px solid #ffffff;
+    border-radius: 9px;
+    position: relative;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 0;
+    animation: rotatePhoneAnim 2.2s infinite ease-in-out;
+}
 
-    .center-img {
-        height: 100px !important;
-        max-height: 110px !important;
-    }
+.phone-speaker {
+    width: 12px;
+    height: 2.5px;
+    background-color: #ffffff;
+    border-radius: 2px;
+}
 
-    .couple-names-formal {
-        font-size: 1.25rem !important;
-        margin-bottom: 4px !important;
-        letter-spacing: 2px !important;
-    }
+.phone-screen-inner {
+    width: 82%;
+    height: 62px;
+    border: 1px dashed rgba(255, 255, 255, 0.35);
+    border-radius: 3px;
+}
 
-    .invite-text {
-        font-size: 0.78rem !important;
-        margin-bottom: 4px !important;
-        line-height: 1.15 !important;
-    }
+.phone-home-btn {
+    width: 9px;
+    height: 9px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+}
 
-    .wedding-details {
-        font-size: 0.82rem !important;
-        margin-bottom: 4px !important;
-    }
+@keyframes rotatePhoneAnim {
+    0%, 15% { transform: rotate(0deg); }
+    55%, 85% { transform: rotate(-90deg); }
+    100% { transform: rotate(0deg); }
+}
 
-    /* Panel derecho timeline compacto */
-    .panel-right {
-        padding: 8px 6px !important;
-    }
+.rotate-main-text {
+    font-family: 'Delicate Elegance', serif;
+    font-size: 1.15rem;
+    letter-spacing: 3.5px;
+    font-weight: normal;
+    margin-bottom: 8px;
+    color: #ffffff;
+}
 
-    .timeline-title {
-        font-size: 1.3rem !important;
-        margin-top: 2px !important;
-        margin-bottom: 4px !important;
-    }
+.rotate-sub-text {
+    font-family: 'Delicate Elegance', serif;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    color: #c7c0b5;
+    font-style: italic;
+}
 
-    .timeline-container {
-        gap: 8px !important;
-        padding: 4px 0 !important;
-    }
+/* ================= TARJETA / TRÍPTICO ================= */
+.invitation-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-    .tl-icon {
-        width: 32px !important;
-    }
+.invitation-card {
+    position: relative;
+    width: 900px;
+    height: 636px;
+    background: transparent;
+    transform-origin: center center;
+    flex-shrink: 0;
+}
 
-    .tl-text {
-        font-size: 0.72rem !important;
-    }
+/* ================= CUBIERTA / PORTADA ================= */
+.gatefold-doors {
+    position: absolute;
+    top: 0;
+    left: 25%;  
+    width: 50%;
+    height: 100%;
+    z-index: 20;
+    cursor: pointer;
+    display: flex;
+    background: transparent;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    transition: opacity 3.5s cubic-bezier(0.4, 0, 0.2, 1), transform 3.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 3.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-    .tl-time {
-        font-size: 0.85rem !important;
-    }
+.door {
+    width: 50%;
+    height: 100%;
+    background: #ffffff;
+    position: relative;
+    overflow: hidden;
+    transition: opacity 3.5s cubic-bezier(0.4, 0, 0.2, 1), transform 3.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-    .info-btn {
-        margin-top: 4px !important;
-        padding: 3px 12px !important;
-        font-size: 0.7rem !important;
-    }
+.door-left { border-right: 1px solid rgba(0, 0, 0, 0.04); }
+.door-right { border-left: 1px solid rgba(0, 0, 0, 0.04); }
+
+.cover-script {
+    position: absolute;
+    top: 175px;
+    width: 100%;
+    font-family: 'Aerotis', cursive;
+    font-size: 2.65rem;
+    color: #1a1a1a;
+    font-weight: normal;
+    margin: 0;
+    z-index: 2;
+}
+
+.door-left .cover-script { text-align: right; padding-right: 15px; }
+.door-right .cover-script { text-align: left; padding-left: 15px; }
+
+.split-bg {
+    position: absolute;
+    bottom: 0;
+    width: 200%;
+    height: 100%;
+    background-image: url('assets/iglesia.png');
+    background-size: 100% auto;
+    background-position: center 85%;
+    background-repeat: no-repeat;
+    z-index: 1;
+}
+
+.door-left .split-bg { left: 0; }
+.door-right .split-bg { left: -100%; }
+
+.invitation-card.open .gatefold-doors { 
+    pointer-events: none; 
+    box-shadow: none;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.invitation-card.open .door-left { 
+    transform: translateX(-35px); 
+    opacity: 0; 
+}
+
+.invitation-card.open .door-right { 
+    transform: translateX(35px); 
+    opacity: 0; 
+}
+
+/* ================= CONTENIDO INTERIOR TRÍPTICO ================= */
+.inside-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    background: #ffffff;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.985);
+    transition: opacity 3.5s cubic-bezier(0.4, 0, 0.2, 1), transform 3.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 3.5s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.invitation-card.open .inside-content { 
+    opacity: 1; 
+    visibility: visible;
+    transform: scale(1); 
+    pointer-events: auto; 
+}
+
+/* ================= PANEL IZQUIERDO ================= */
+.panel-left {
+    width: 25%;
+    padding: 70px 15px 25px 15px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.texto-bonito-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Delicate Elegance', serif;
+    font-weight: normal; 
+    font-size: 0.95rem;
+    color: #000000;
+    margin-bottom: 25px;
+    text-align: center;
+    line-height: 1.4;
+}
+
+.texto-bonito-box .travesura {
+    font-style: italic;
+    margin-top: 15px;
+}
+
+.confirmacion-box { 
+    text-align: center; 
+    width: 100%; 
+    margin-top: 30px; 
+}
+
+.confirmacion-box p { 
+    font-size: 0.95rem; 
+    margin-bottom: 8px; 
+    line-height: 1.4; 
+    font-weight: normal; 
+}
+
+.link-container a {
+    font-family: 'Delicate Elegance', serif; 
+    font-size: 1.1rem;
+    color: #1a1a1a; 
+    text-decoration: none; 
+    border-bottom: 1px solid #1a1a1a; 
+    padding-bottom: 4px; 
+    letter-spacing: 1.5px; 
+    transition: opacity 0.3s ease; 
+}
+
+.link-container a:hover {
+    opacity: 0.5; 
+}
+
+.iban-box {
+    text-align: center;
+    width: 100%;
+}
+
+.iban-box p {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    font-weight: normal;
+}
+
+.iban-box .iban-number {
+    font-size: 0.95rem;
+    letter-spacing: 1.5px;
+}
+
+/* ================= PANEL CENTRAL ================= */
+.panel-center {
+    width: 50%;
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-left: 1px dashed #e6e0d8;
+    border-right: 1px dashed #e6e0d8;
+    position: relative;
+    z-index: 5;
+}
+
+.main-illustration-box {
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px; 
+    display: flex;
+    justify-content: center;
+    position: relative; 
+    top: 25px; 
+}
+
+.center-img {
+    max-width: 100%;
+    height: 300px; 
+    max-height: 400px; 
+    object-fit: contain;
+}
+
+.section-title {
+    font-family: 'Delicate Caligraphy', cursive;
+    font-weight: normal;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.couple-names-formal {
+    font-family: 'Delicate Caligraphy', cursive;
+    font-size: 1.75rem;
+    font-weight: normal;
+    letter-spacing: 3px;
+    line-height: 1;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #1a1a1a;
+}
+
+.ampersand {
+    font-family: 'Delicate Caligraphy', cursive;
+    font-size: 1.3rem;
+    font-weight: normal;
+    -webkit-font-smoothing: antialiased; 
+    text-shadow: none;        
+    display: inline-block;
+    margin: -5px 0;
+    color: #1a1a1a;
+}
+
+.invite-text {
+    font-family: 'Delicate Elegance';
+    font-size: 1.1rem;
+    font-weight: normal;
+    line-height: 1.2;
+    margin-bottom: 45px;
+    color: #1a1a1a;
+    text-align: center;
+}
+
+.wedding-details {
+    font-family: 'Delicate Elegance';
+    font-size: 1.20rem;
+    font-weight: normal;
+    letter-spacing: 1px;
+    line-height: 1;
+    text-align: center;
+    color: #000000;
+    margin-bottom: 75px;
+}
+
+.wedding-details a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* ================= PANEL DERECHO (TIMELINE) ================= */
+.panel-right {
+    width: 25%;
+    padding: 25px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.timeline-title {
+    font-family: 'Delicate Caligraphy', cursive;
+    font-size: 2rem; 
+    font-weight: normal;
+    letter-spacing: 3px; 
+    margin-top: 40px; 
+    margin-bottom: 10px;
+    text-align: center;
+    color: #1a1a1a;
+}
+
+.timeline-container {
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+    gap: 30px; 
+    flex-grow: 1;
+    padding: 30px 0; 
+}
+
+.timeline-line {
+    position: absolute;
+    left: 50%;
+    top: 20px;
+    bottom: 20px;
+    width: 1px;
+    background-color: #1a1a1a;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+.timeline-line::before,
+.timeline-line::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background-color: #1a1a1a;
+    border-radius: 50%;
+    transform: translateX(-50%);
+}
+.timeline-line::before { top: 0; }
+.timeline-line::after { bottom: 0; }
+
+.tl-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.tl-icon-box {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 15px; 
+}
+
+.tl-icon {
+    width: 60px;
+    height: auto;
+}
+
+.tl-dash {
+    width: 25px;
+    height: 1px;
+    background-color: #1a1a1a;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+}
+
+.tl-text {
+    font-family: 'Delicate Elegance', serif;
+    font-size: 0.95rem; 
+    font-weight: normal;
+    line-height: 1.2; 
+    letter-spacing: 1px;
+    flex: 1;
+    text-align: center; 
+    padding-left: 10px; 
+    color: #1a1a1a;
+}
+
+.tl-time {
+    font-size: 1.25rem; 
+}
+
+/* ================= BOTÓN DISCRETO "MÁS INFORMACIÓN" ================= */
+.info-btn {
+    margin-top: 14px;
+    background: #fbf9f5;
+    color: #555b4a;
+    border: 1px solid #dcd5c7;
+    padding: 7px 16px;
+    border-radius: 20px;
+    font-family: 'Delicate Elegance', serif;
+    font-size: 0.8rem;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 30;
+}
+
+.info-btn span {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #606c38;
+}
+
+.info-btn:hover {
+    background: #606c38;
+    color: #ffffff;
+    border-color: #606c38;
+}
+
+.info-btn:hover span {
+    color: #ffffff;
+}
+
+/* ================= MODAL / TARJETÓN ANEXO ================= */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(40, 42, 35, 0.45);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-card {
+    background: #fdfbf7;
+    border: 1px solid #e5dec9;
+    border-radius: 6px;
+    width: 100%;
+    max-width: 360px;
+    padding: 26px 22px 22px 22px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    position: relative;
+    transform: translateY(12px) scale(0.97);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    text-align: center;
+}
+
+.modal-overlay.active .modal-card {
+    transform: translateY(0) scale(1);
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: 1.1rem;
+    color: #7b8070;
+    cursor: pointer;
+    padding: 5px;
+    line-height: 1;
+    transition: color 0.2s ease;
+}
+
+.modal-close:hover {
+    color: #1a1a1a;
+}
+
+.modal-title {
+    font-family: 'Delicate Caligraphy', cursive;
+    font-size: 1.35rem;
+    font-weight: normal;
+    letter-spacing: 2px;
+    color: #2b2e24;
+    margin-bottom: 4px;
+}
+
+.modal-divider {
+    width: 45px;
+    height: 1px;
+    background-color: #8f967d;
+    margin: 8px auto 18px auto;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed #e8e2d2;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.info-text h4 {
+    font-family: 'Delicate Caligraphy', cursive;
+    font-size: 1.05rem;
+    font-weight: normal;
+    letter-spacing: 1px;
+    color: #2b2e24;
+    margin-bottom: 2px;
+}
+
+.info-text p {
+    font-family: 'Delicate Elegance', serif;
+    font-size: 0.9rem;
+    color: #4a4d42;
+    line-height: 1.35;
 }
