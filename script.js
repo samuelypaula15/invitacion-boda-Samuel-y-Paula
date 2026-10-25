@@ -3,6 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const doors = document.getElementById('gatefoldDoors');
     const wrapper = document.querySelector('.invitation-wrapper');
 
+    // ================= CONTROL DE MÚSICA DE FONDO =================
+    const bgMusic = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicBtn');
+    let isMusicPlaying = false;
+
     // ================= CONTROL DEL OVERLAY DE ROTACIÓN =================
     const rotateOverlay = document.getElementById('rotateScreenOverlay');
 
@@ -14,6 +19,14 @@ document.addEventListener('DOMContentLoaded', () => {
         rotateOverlay.addEventListener('click', () => {
             clearTimeout(timer);
             rotateOverlay.classList.add('fade-out');
+            
+            try {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen();
+                }
+            } catch (error) {}
         });
 
         window.addEventListener('orientationchange', () => {
@@ -22,52 +35,66 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ================= APERTURA DE LA TARJETA =================
-    doors.addEventListener('click', () => {
-        card.classList.add('open');
-    });
+    // ================= APERTURA Y CIERRE DE LA TARJETA + MÚSICA =================
+    if (doors && card) {
+        doors.addEventListener('click', () => {
+            card.classList.add('open');
 
-    // ================= MODAL INFORMACIÓN EXTRA =================
-    const openBtn = document.getElementById('openInfoBtn');
-    const closeBtn = document.getElementById('closeInfoBtn');
-    const overlay = document.getElementById('modalOverlay');
-
-    function openModal() {
-        if (overlay) overlay.classList.add('active');
-    }
-
-    function closeModal() {
-        if (overlay) overlay.classList.remove('active');
-    }
-
-    if (openBtn) openBtn.addEventListener('click', openModal);
-    if (closeBtn) closeBtn.addEventListener('click', closeModal);
-
-    if (overlay) {
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) {
-                closeModal();
+            if (bgMusic) {
+                bgMusic.play().then(() => {
+                    isMusicPlaying = true;
+                    if (musicBtn) musicBtn.classList.remove('paused');
+                }).catch(error => {
+                    console.log("Reproducción bloqueada por el navegador:", error);
+                });
             }
         });
     }
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeModal();
-    });
+    // Cerrar al hacer clic en el panel central
+    const panelCenter = document.querySelector('.panel-center');
+    if (panelCenter && card) {
+        panelCenter.addEventListener('click', (e) => {
+            // Evitamos cerrar si el usuario ha hecho clic sobre el enlace del mapa
+            if (e.target.closest('a')) return;
+            
+            card.classList.remove('open');
+        });
+    }
 
-    // ================= ESCALADO ADAPTATIVO =================
+    // Control del botón flotante de música
+    if (musicBtn && bgMusic) {
+        musicBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                isMusicPlaying = false;
+                musicBtn.classList.add('paused');
+            } else {
+                bgMusic.play().then(() => {
+                    isMusicPlaying = true;
+                    musicBtn.classList.remove('paused');
+                }).catch(error => {});
+            }
+        });
+    }
+
+    // ================= ESCALADO ADAPTATIVO EXACTO PARA SAFARI =================
     function scaleInvitation() {
         if (!card || !wrapper) return;
 
-        const isMobile = window.innerWidth <= 768;
-        const marginX = isMobile ? 8 : 40;
-        const marginY = isMobile ? 80 : 90;
+        const bodyRect = document.body.getBoundingClientRect();
+        const availableW = bodyRect.width;
+        const availableH = bodyRect.height;
 
-        const availableW = window.innerWidth - marginX;
-        const availableH = window.innerHeight - marginY;
+        const isMobile = availableW <= 768;
+        const isLandscape = availableW > availableH;
+        
+        const marginX = isMobile ? 12 : 40;
+        const marginY = isMobile ? (isLandscape ? 35 : 12) : 40;
 
-        const scaleX = availableW / 900;
-        const scaleY = availableH / 636;
+        const scaleX = (availableW - marginX) / 900;
+        const scaleY = (availableH - marginY) / 636;
         
         const scale = Math.min(scaleX, scaleY, 1);
 
@@ -77,6 +104,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.addEventListener('resize', scaleInvitation);
-    window.addEventListener('orientationchange', scaleInvitation);
+    window.addEventListener('orientationchange', () => {
+        setTimeout(scaleInvitation, 150);
+    });
+    
     scaleInvitation();
 });
