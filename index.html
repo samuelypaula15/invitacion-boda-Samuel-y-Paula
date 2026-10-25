@@ -4,9 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Boda Samuel y Paula</title>
-    <link rel="stylesheet" href="styles.css?v=50">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#f7f5f2">
+    
+    <link rel="stylesheet" href="styles.css?v=85">
 </head>
 <body>
+
+    <!-- REPRODUCTOR DE MÚSICA DE FONDO -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="assets/cancion.mp3" type="audio/mp3">
+    </audio>
+
+    <!-- BOTÓN FLOTANTE DE MÚSICA -->
+    <button class="music-btn paused" id="musicBtn" type="button" aria-label="Silenciar / Reproducir música">
+        <span class="music-icon">🎵</span>
+    </button>
 
     <!-- OVERLAY ANIMADO: GIRA TU TELÉFONO -->
     <div class="rotate-screen-overlay" id="rotateScreenOverlay">
@@ -52,15 +68,20 @@
                         <p class="travesura">Travesura realizada.</p>
                     </div>
 
-                    <div class="confirmacion-box">
-                        <h2 class="section-title">CONFIRMACIÓN</h2>
-                        <p>Confírmanos tu asistencia<br>en el siguiente enlace:</p>
-                        <div class="link-container" style="margin-top: 8px !important;">
-                            <a href="https://forms.google.com" target="_blank">CONFIRMAR ASISTENCIA</a>
-                        </div>
+                    <!-- BLOQUE 1: DRESS CODE -->
+                    <div class="info-extra-box">
+                        <h3 class="info-title">Dress code</h3>
+                        <p>Tus mejores galas<br><span class="italic-note">(nada de blanco o muy claritos)</span></p>
                     </div>
 
-                    <div class="iban-box" style="margin-top: 55px !important;">
+                    <!-- BLOQUE 2: APARCAMIENTO -->
+                    <div class="info-extra-box">
+                        <h3 class="info-title">Aparcamiento</h3>
+                        <p>La masía cuenta con aparcamiento<br>privado para los invitados.</p>
+                    </div>
+
+                    <!-- BLOQUE 3: IBAN / LUNA DE MIEL -->
+                    <div class="iban-box">
                         <p>Si quieres contribuir al viaje de<br>luna de miel te dejamos el IBAN:</p>
                         <p class="iban-number">ESXX XXXX XXXX XXXX XXXX</p>
                     </div>
@@ -112,7 +133,7 @@
                             <div class="tl-icon-box"><img src="assets/aperitivo.png" alt="Aperitivo" class="tl-icon"></div>
                             <div class="tl-dash"></div>
                             <div class="tl-text">
-                                <span class="tl-time">19:30h</span><br>Aperitivo
+                                <span class="tl-time">19:00h</span><br>Aperitivo
                             </div>
                         </div>
 
@@ -120,7 +141,7 @@
                             <div class="tl-icon-box"><img src="assets/banquete.png" alt="Banquete" class="tl-icon"></div>
                             <div class="tl-dash"></div>
                             <div class="tl-text">
-                                <span class="tl-time">21:00h</span><br>Banquete
+                                <span class="tl-time">20:30h</span><br>Banquete
                             </div>
                         </div>
 
@@ -128,7 +149,7 @@
                             <div class="tl-icon-box"><img src="assets/fiesta.png" alt="Fiesta" class="tl-icon"></div>
                             <div class="tl-dash"></div>
                             <div class="tl-text">
-                                <span class="tl-time">23:00h</span><br>Fiesta!!
+                                <span class="tl-time">22:30h</span><br>Fiesta!!
                             </div>
                         </div>
                     </div>
@@ -138,43 +159,6 @@
         </div>
     </main>
 
-    <!-- BOTÓN DISCRETO "MÁS INFORMACIÓN" -->
-    <button class="info-btn" id="openInfoBtn" type="button">
-        <span>+</span> MÁS INFORMACIÓN
-    </button>
-
-    <!-- TARJETÓN ANEXO MODAL -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-card">
-            <button class="modal-close" id="closeInfoBtn" aria-label="Cerrar">✕</button>
-            <h3 class="modal-title">INFORMACIÓN DE INTERÉS</h3>
-            <div class="modal-divider"></div>
-
-            <div class="modal-content">
-                <div class="info-item">
-                    <div class="info-text">
-                        <h4>Aparcamiento</h4>
-                        <p>La masía cuenta con aparcamiento privado.</p>
-                    </div>
-                </div>
-
-                <div class="info-item">
-                    <div class="info-text">
-                        <h4>Dress code</h4>
-                        <p>Tus mejores galas.</p>
-                    </div>
-                </div>
-
-                <div class="info-item">
-                    <div class="info-text">
-                        <h4>Confirmación</h4>
-                        <p>Fecha límite de confirmación: 15 de marzo.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="script.js?v=21"></script>
+    <script src="script.js?v=85"></script>
 </body>
 </html>
