@@ -1,112 +1,599 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const card = document.getElementById('invitationCard');
-    const doors = document.getElementById('gatefoldDoors');
-    const wrapper = document.querySelector('.invitation-wrapper');
+/* ================= FUENTES WEBFONT (.WOFF2 / .WOFF) ================= */
+@font-face {
+    font-family: 'Aerotis';
+    src: url('fonts/aerotis-webfont.woff2') format('woff2'),
+         url('fonts/aerotis-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
 
-    // ================= CONTROL DE MÚSICA DE FONDO =================
-    const bgMusic = document.getElementById('bgMusic');
-    const musicBtn = document.getElementById('musicBtn');
-    let isMusicPlaying = false;
+@font-face {
+    font-family: 'Delicate Caligraphy';
+    src: url('fonts/DelicateCaligraphy-Demo.woff2') format('woff2'),
+         url('fonts/DelicateCaligraphy-Demo.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
 
-    // ================= CONTROL DEL OVERLAY DE ROTACIÓN =================
-    const rotateOverlay = document.getElementById('rotateScreenOverlay');
+@font-face {
+    font-family: 'Delicate Elegance';
+    src: url('fonts/DelicateElegance-Regular.woff2') format('woff2'),
+         url('fonts/DelicateElegance-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
 
-    if (rotateOverlay) {
-        const timer = setTimeout(() => {
-            rotateOverlay.classList.add('fade-out');
-        }, 3500);
+/* ================= RESET BÁSICO ================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-        rotateOverlay.addEventListener('click', () => {
-            clearTimeout(timer);
-            rotateOverlay.classList.add('fade-out');
-            
-            try {
-                if (document.documentElement.requestFullscreen) {
-                    document.documentElement.requestFullscreen();
-                } else if (document.documentElement.webkitRequestFullscreen) {
-                    document.documentElement.webkitRequestFullscreen();
-                }
-            } catch (error) {}
-        });
-
-        window.addEventListener('orientationchange', () => {
-            clearTimeout(timer);
-            rotateOverlay.classList.add('fade-out');
-        });
-    }
-
-    // ================= APERTURA Y CIERRE DE LA TARJETA + MÚSICA =================
-    if (doors && card) {
-        doors.addEventListener('click', () => {
-            card.classList.add('open');
-
-            if (bgMusic) {
-                bgMusic.play().then(() => {
-                    isMusicPlaying = true;
-                    if (musicBtn) musicBtn.classList.remove('paused');
-                }).catch(error => {
-                    console.log("Reproducción bloqueada por el navegador:", error);
-                });
-            }
-        });
-    }
-
-    // Cerrar al hacer clic en el panel central
-    const panelCenter = document.querySelector('.panel-center');
-    if (panelCenter && card) {
-        panelCenter.addEventListener('click', (e) => {
-            // Evitamos cerrar si el usuario ha hecho clic sobre el enlace del mapa
-            if (e.target.closest('a')) return;
-            
-            card.classList.remove('open');
-        });
-    }
-
-    // Control del botón flotante de música
-    if (musicBtn && bgMusic) {
-        musicBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (isMusicPlaying) {
-                bgMusic.pause();
-                isMusicPlaying = false;
-                musicBtn.classList.add('paused');
-            } else {
-                bgMusic.play().then(() => {
-                    isMusicPlaying = true;
-                    musicBtn.classList.remove('paused');
-                }).catch(error => {});
-            }
-        });
-    }
-
-    // ================= ESCALADO ADAPTATIVO EXACTO PARA SAFARI =================
-    function scaleInvitation() {
-        if (!card || !wrapper) return;
-
-        const bodyRect = document.body.getBoundingClientRect();
-        const availableW = bodyRect.width;
-        const availableH = bodyRect.height;
-
-        const isMobile = availableW <= 768;
-        const isLandscape = availableW > availableH;
-        
-        const marginX = isMobile ? 12 : 40;
-        const marginY = isMobile ? (isLandscape ? 35 : 12) : 40;
-
-        const scaleX = (availableW - marginX) / 900;
-        const scaleY = (availableH - marginY) / 636;
-        
-        const scale = Math.min(scaleX, scaleY, 1);
-
-        card.style.transform = `scale(${scale})`;
-        wrapper.style.width = `${900 * scale}px`;
-        wrapper.style.height = `${636 * scale}px`;
-    }
-
-    window.addEventListener('resize', scaleInvitation);
-    window.addEventListener('orientationchange', () => {
-        setTimeout(scaleInvitation, 150);
-    });
+body {
+    background-color: #f7f5f2;
+    font-family: 'Delicate Elegance', serif;
+    color: #1a1a1a;
     
-    scaleInvitation();
-});
+    min-height: 100vh;
+    min-height: 100dvh;
+    height: 100vh;
+    height: 100dvh;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* ================= BOTÓN FLOTANTE DE MÚSICA ================= */
+.music-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 42px;
+    height: 42px;
+    background: #fbf9f5;
+    color: #555b4a;
+    border: 1px solid #dcd5c7;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 100;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.music-btn .music-icon {
+    font-size: 1.1rem;
+    transition: opacity 0.3s ease;
+}
+
+.music-btn.paused {
+    opacity: 0.5;
+}
+
+.music-btn:hover {
+    background: #606c38;
+    color: #ffffff;
+    border-color: #606c38;
+}
+
+/* ================= OVERLAY ANIMADO: GIRA TU TELÉFONO ================= */
+.rotate-screen-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(18, 18, 18, 0.92);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+    cursor: pointer;
+}
+
+@media (min-width: 769px), (orientation: landscape) {
+    .rotate-screen-overlay {
+        display: none !important;
+    }
+}
+
+.rotate-screen-overlay.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.rotate-screen-content {
+    text-align: center;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.rotate-anim-box {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.curved-arrow {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 60px;
+    height: 60px;
+    z-index: 2;
+    animation: pulseArrow 2.2s infinite ease-in-out;
+}
+
+@keyframes pulseArrow {
+    0%, 100% { opacity: 0.35; transform: scale(0.95); }
+    50% { opacity: 1; transform: scale(1.05); }
+}
+
+.phone-icon-anim {
+    width: 50px;
+    height: 90px;
+    border: 3.5px solid #ffffff;
+    border-radius: 9px;
+    position: relative;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 0;
+    animation: rotatePhoneAnim 2.2s infinite ease-in-out;
+}
+
+.phone-speaker {
+    width: 12px;
+    height: 2.5px;
+    background-color: #ffffff;
+    border-radius: 2px;
+}
+
+.phone-screen-inner {
+    width: 82%;
+    height: 62px;
+    border: 1px dashed rgba(255, 255, 255, 0.35);
+    border-radius: 3px;
+}
+
+.phone-home-btn {
+    width: 9px;
+    height: 9px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+}
+
+@keyframes rotatePhoneAnim {
+    0%, 15% { transform: rotate(0deg); }
+    55%, 85% { transform: rotate(-90deg); }
+    100% { transform: rotate(0deg); }
+}
+
+.rotate-main-text {
+    font-family: 'Delicate Elegance', serif;
+    font-size: 1.15rem;
+    letter-spacing: 3.5px;
+    font-weight: normal;
+    margin-bottom: 8px;
+    color: #ffffff;
+}
+
+.rotate-sub-text {
+    font-family: 'Delicate Elegance', serif;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    color: #c7c0b5;
+    font-style: italic;
+}
+
+/* ================= TARJETA / TRÍPTICO ================= */
+.invitation-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.invitation-card {
+    position: relative;
+    width: 900px;
+    height: 636px;
+    background: transparent;
+    transform-origin: center center;
+    flex-shrink: 0;
+
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* ================= CUBIERTA / PORTADA ================= */
+.gatefold-doors {
+    position: absolute;
+    top: 0;
+    left: 25%;  
+    width: 50%;
+    height: 100%;
+    z-index: 20;
+    cursor: pointer;
+    display: flex;
+    background: transparent;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    transition: opacity 3.5s cubic-bezier(0.4, 0, 0.2, 1), transform 3.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 3.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.door {
+    width: 50%;
+    height: 100%;
+    background: #ffffff;
+    position: relative;
+    overflow: hidden;
+    transition: opacity 3.5s cubic-bezier(0.4, 0, 0.2, 1), transform 3.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.door-left { border-right: 1px solid rgba(0, 0, 0, 0.04); }
+.door-right { border-left: 1px solid rgba(0, 0, 0, 0.04); }
+
+.cover-script {
+    position: absolute;
+    top: 175px;
+    width: 100%;
+    font-family: 'Aerotis', cursive;
+    font-size: 2.65rem;
+    color: #1a1a1a;
+    font-weight: normal;
+    margin: 0;
+    z-index: 2;
+}
+
+.door-left .cover-script { text-align: right; padding-right: 15px; }
+.door-right .cover-script { text-align: left; padding-left: 15px; }
+
+.split-bg {
+    position: absolute;
+    bottom: 0;
+    width: 200%;
+    height: 100%;
+    background-image: url('assets/iglesia.png');
+    background-size: 100% auto;
+    background-position: center 85%;
+    background-repeat: no-repeat;
+    z-index: 1;
+}
+
+.door-left .split-bg { left: 0; }
+.door-right .split-bg { left: -100%; }
+
+.invitation-card.open .gatefold-doors { 
+    pointer-events: none; 
+    box-shadow: none;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.invitation-card.open .door-left { 
+    transform: translateX(-35px); 
+    opacity: 0; 
+}
+
+.invitation-card.open .door-right { 
+    transform: translateX(35px); 
+    opacity: 0; 
+}
+
+/* ================= CONTENIDO INTERIOR TRÍPTICO ================= */
+.inside-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    background: #ffffff;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.985);
+    transition: opacity 3.5s cubic-bezier(0.4, 0, 0.2, 1), transform 3.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 3.5s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.invitation-card.open .inside-content { 
+    opacity: 1; 
+    visibility: visible;
+    transform: scale(1); 
+    pointer-events: auto; 
+}
+
+/* ================= PANEL IZQUIERDO ================= */
+.panel-left {
+    width: 25%;
+    padding: 68px 15px 50px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.texto-bonito-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Delicate Elegance', serif;
+    font-weight: normal; 
+    font-size: 0.93rem;
+    color: #000000;
+    text-align: center;
+    line-height: 1.35;
+    margin-top: 0;
+}
+
+.texto-bonito-box .travesura {
+    font-style: italic;
+    margin-top: 10px;
+}
+
+.info-extra-box {
+    width: 100%;
+    text-align: center;
+    font-family: 'Delicate Elegance', serif;
+}
+
+.info-title {
+    font-family: 'Delicate Caligraphy', cursive;
+    font-size: 1.1rem;
+    font-weight: normal;
+    letter-spacing: 1.5px;
+    color: #1a1a1a;
+    margin-bottom: 2px;
+}
+
+.info-extra-box p {
+    font-size: 0.85rem;
+    line-height: 1.3;
+    color: #1a1a1a;
+    font-weight: normal;
+}
+
+.italic-note {
+    font-style: italic;
+    font-size: 0.8rem;
+    color: #333333;
+}
+
+.iban-box {
+    text-align: center;
+    width: 100%;
+}
+
+.iban-box p {
+    font-size: 0.85rem;
+    line-height: 1.35;
+    margin-bottom: 5px;
+    font-weight: normal;
+}
+
+.iban-box .iban-number {
+    font-size: 0.9rem;
+    letter-spacing: 1.5px;
+}
+
+/* ================= PANEL CENTRAL ================= */
+.panel-center {
+    width: 50%;
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-left: 1px dashed #e6e0d8;
+    border-right: 1px dashed #e6e0d8;
+    position: relative;
+    z-index: 5;
+    cursor: pointer; /* Le ponemos el cursor pointer para indicar que se puede clicar */
+}
+
+.main-illustration-box {
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px; 
+    display: flex;
+    justify-content: center;
+    position: relative; 
+    top: 15px; 
+}
+
+.center-img {
+    max-width: 100%;
+    height: 280px; 
+    max-height: 380px; 
+    object-fit: contain;
+}
+
+.section-title {
+    font-family: 'Delicate Caligraphy', cursive;
+    font-weight: normal;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.couple-names-formal {
+    font-family: 'Delicate Caligraphy', cursive;
+    font-size: 1.70rem;
+    font-weight: normal;
+    letter-spacing: 3px;
+    line-height: 1;
+    margin-bottom: 25px;
+    text-align: center;
+    color: #1a1a1a;
+}
+
+.ampersand {
+    font-family: 'Delicate Caligraphy', cursive;
+    font-size: 1.2rem;
+    font-weight: normal;
+    -webkit-font-smoothing: antialiased; 
+    text-shadow: none;        
+    display: inline-block;
+    margin: -5px 0;
+    color: #1a1a1a;
+}
+
+.invite-text {
+    font-family: 'Delicate Elegance';
+    font-size: 1.05rem;
+    font-weight: normal;
+    line-height: 1.2;
+    margin-bottom: 35px;
+    color: #1a1a1a;
+    text-align: center;
+}
+
+.wedding-details {
+    font-family: 'Delicate Elegance';
+    font-size: 1.15rem;
+    font-weight: normal;
+    letter-spacing: 1px;
+    line-height: 1;
+    text-align: center;
+    color: #000000;
+    margin-bottom: 55px;
+}
+
+.wedding-details a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* ================= PANEL DERECHO (TIMELINE) ================= */
+.panel-right {
+    width: 25%;
+    padding: 25px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.timeline-title {
+    font-family: 'Delicate Caligraphy', cursive;
+    font-size: 2rem; 
+    font-weight: normal;
+    letter-spacing: 3px; 
+    margin-top: 40px; 
+    margin-bottom: 10px;
+    text-align: center;
+    color: #1a1a1a;
+}
+
+.timeline-container {
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+    gap: 30px; 
+    flex-grow: 1;
+    padding: 30px 0; 
+}
+
+.timeline-line {
+    position: absolute;
+    left: 50%;
+    top: 20px;
+    bottom: 20px;
+    width: 1px;
+    background-color: #1a1a1a;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+.timeline-line::before,
+.timeline-line::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background-color: #1a1a1a;
+    border-radius: 50%;
+    transform: translateX(-50%);
+}
+.timeline-line::before { top: 0; }
+.timeline-line::after { bottom: 0; }
+
+.tl-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.tl-icon-box {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 15px; 
+}
+
+.tl-icon {
+    width: 60px;
+    height: auto;
+}
+
+.tl-dash {
+    width: 25px;
+    height: 1px;
+    background-color: #1a1a1a;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+}
+
+.tl-text {
+    font-family: 'Delicate Elegance', serif;
+    font-size: 0.95rem; 
+    font-weight: normal;
+    line-height: 1.2; 
+    letter-spacing: 1px;
+    flex: 1;
+    text-align: center; 
+    padding-left: 10px; 
+    color: #1a1a1a;
+}
+
+.tl-time {
+    font-size: 1.25rem; 
+}
