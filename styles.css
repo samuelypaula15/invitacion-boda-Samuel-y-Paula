@@ -23,6 +23,14 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'Delicate Elegance';
+    src: url('fonts/DelicateElegance-Italic.woff2') format('woff2'),
+         url('fonts/DelicateElegance-Italic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+}
+
 /* ================= RESET BÁSICO ================= */
 * {
     box-sizing: border-box;
@@ -30,16 +38,23 @@
     padding: 0;
 }
 
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
 body {
     background-color: #f7f5f2;
     font-family: 'Delicate Elegance', serif;
     color: #1a1a1a;
-    
-    min-height: 100vh;
-    min-height: 100dvh;
+
     height: 100vh;
     height: 100dvh;
-    
+
+    /* Respeta notch y barras del móvil */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right)
+             env(safe-area-inset-bottom) env(safe-area-inset-left);
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -54,8 +69,8 @@ body {
 /* ================= BOTÓN FLOTANTE DE MÚSICA ================= */
 .music-btn {
     position: fixed;
-    top: 20px;
-    left: 20px;
+    top: calc(12px + env(safe-area-inset-top));
+    left: calc(12px + env(safe-area-inset-left));
     width: 42px;
     height: 42px;
     background: #fbf9f5;
@@ -223,6 +238,7 @@ body {
     background: transparent;
     transform-origin: center center;
     flex-shrink: 0;
+    transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
 
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
@@ -232,7 +248,7 @@ body {
 .gatefold-doors {
     position: absolute;
     top: 0;
-    left: 25%;  
+    left: 25%;
     width: 50%;
     height: 100%;
     z-index: 20;
@@ -285,21 +301,21 @@ body {
 .door-left .split-bg { left: 0; }
 .door-right .split-bg { left: -100%; }
 
-.invitation-card.open .gatefold-doors { 
-    pointer-events: none; 
+.invitation-card.open .gatefold-doors {
+    pointer-events: none;
     box-shadow: none;
     opacity: 0;
     visibility: hidden;
 }
 
-.invitation-card.open .door-left { 
-    transform: translateX(-35px); 
-    opacity: 0; 
+.invitation-card.open .door-left {
+    transform: translateX(-35px);
+    opacity: 0;
 }
 
-.invitation-card.open .door-right { 
-    transform: translateX(35px); 
-    opacity: 0; 
+.invitation-card.open .door-right {
+    transform: translateX(35px);
+    opacity: 0;
 }
 
 /* ================= CONTENIDO INTERIOR TRÍPTICO ================= */
@@ -321,11 +337,11 @@ body {
     overflow: hidden;
 }
 
-.invitation-card.open .inside-content { 
-    opacity: 1; 
+.invitation-card.open .inside-content {
+    opacity: 1;
     visibility: visible;
-    transform: scale(1); 
-    pointer-events: auto; 
+    transform: scale(1);
+    pointer-events: auto;
 }
 
 /* ================= PANEL IZQUIERDO ================= */
@@ -346,7 +362,7 @@ body {
     justify-content: center;
     align-items: center;
     font-family: 'Delicate Elegance', serif;
-    font-weight: normal; 
+    font-weight: normal;
     font-size: 0.93rem;
     color: #000000;
     text-align: center;
@@ -416,23 +432,23 @@ body {
     border-right: 1px dashed #e6e0d8;
     position: relative;
     z-index: 5;
-    cursor: pointer; /* Le ponemos el cursor pointer para indicar que se puede clicar */
+    cursor: pointer;
 }
 
 .main-illustration-box {
     width: 100%;
     margin-top: 5px;
-    margin-bottom: 5px; 
+    margin-bottom: 5px;
     display: flex;
     justify-content: center;
-    position: relative; 
-    top: 15px; 
+    position: relative;
+    top: 15px;
 }
 
 .center-img {
     max-width: 100%;
-    height: 280px; 
-    max-height: 380px; 
+    height: 280px;
+    max-height: 380px;
     object-fit: contain;
 }
 
@@ -460,15 +476,15 @@ body {
     font-family: 'Delicate Caligraphy', cursive;
     font-size: 1.2rem;
     font-weight: normal;
-    -webkit-font-smoothing: antialiased; 
-    text-shadow: none;        
+    -webkit-font-smoothing: antialiased;
+    text-shadow: none;
     display: inline-block;
     margin: -5px 0;
     color: #1a1a1a;
 }
 
 .invite-text {
-    font-family: 'Delicate Elegance';
+    font-family: 'Delicate Elegance', serif;
     font-size: 1.05rem;
     font-weight: normal;
     line-height: 1.2;
@@ -478,7 +494,7 @@ body {
 }
 
 .wedding-details {
-    font-family: 'Delicate Elegance';
+    font-family: 'Delicate Elegance', serif;
     font-size: 1.15rem;
     font-weight: normal;
     letter-spacing: 1px;
@@ -505,10 +521,10 @@ body {
 
 .timeline-title {
     font-family: 'Delicate Caligraphy', cursive;
-    font-size: 2rem; 
+    font-size: 2rem;
     font-weight: normal;
-    letter-spacing: 3px; 
-    margin-top: 40px; 
+    letter-spacing: 3px;
+    margin-top: 40px;
     margin-bottom: 10px;
     text-align: center;
     color: #1a1a1a;
@@ -520,10 +536,10 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; 
-    gap: 30px; 
+    justify-content: center;
+    gap: 30px;
     flex-grow: 1;
-    padding: 30px 0; 
+    padding: 30px 0;
 }
 
 .timeline-line {
@@ -564,7 +580,7 @@ body {
     flex: 1;
     display: flex;
     justify-content: flex-end;
-    padding-right: 15px; 
+    padding-right: 15px;
 }
 
 .tl-icon {
@@ -584,16 +600,16 @@ body {
 
 .tl-text {
     font-family: 'Delicate Elegance', serif;
-    font-size: 0.95rem; 
+    font-size: 0.95rem;
     font-weight: normal;
-    line-height: 1.2; 
+    line-height: 1.2;
     letter-spacing: 1px;
     flex: 1;
-    text-align: center; 
-    padding-left: 10px; 
+    text-align: center;
+    padding-left: 10px;
     color: #1a1a1a;
 }
 
 .tl-time {
-    font-size: 1.25rem; 
+    font-size: 1.25rem;
 }
